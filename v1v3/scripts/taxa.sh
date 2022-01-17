@@ -19,12 +19,3 @@ qiime feature-classifier classify-sklearn --i-classifier /projects/b1052/shared/
 
 qiime metadata tabulate --m-input-file /projects/b1052/mckenna/cando_16s/qiime/v1v3_taxonomy_midas.qza \
 --o-visualization /projects/b1052/mckenna/cando_16s/qiime/v1v3_taxonomy_midas.qzv
-
-module purge all
-module load qiime2/2021.2 # use older version of qiime since SILVA scikit-learn classifier is version 0.23.1
-# silva classifier
-qiime feature-classifier classify-sklearn --i-classifier /projects/b1052/shared/qiime/silva-138-99-nb-classifier.qza \
---i-reads /projects/b1052/mckenna/cando_16s/qiime/v1v3_rep_seqs_dada2.qza --o-classification /projects/b1052/mckenna/cando_16s/qiime/v1v3_taxonomy_silva.qza
-
-qiime metadata tabulate --m-input-file /projects/b1052/mckenna/cando_16s/qiime/v1v3_taxonomy_silva.qza \
---o-visualization /projects/b1052/mckenna/cando_16s/qiime/v1v3_taxonomy_silva.qzv

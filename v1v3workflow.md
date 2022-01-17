@@ -56,7 +56,7 @@ qiime phylogeny align-to-tree-mafft-fasttree \
 --o-rooted-tree /projects/b1052/mckenna/cando_16s/qiime/v1v3_rooted_tree.qza
 ```
 
-7) assign taxonomy with [taxa.sh](https://github.com/mckfarm/wssc/blob/main/scripts/taxa.sh)
+7) assign taxonomy with [taxa.sh](https://github.com/mckfarm/cando_16s/blob/main/v1v3/scripts/taxa.sh)
 - assigns taxa from Midas and Silva classifers
 - also produces output qzv file for viewing
 
@@ -66,24 +66,24 @@ qiime phylogeny align-to-tree-mafft-fasttree \
 ```
 qiime diversity alpha-rarefaction \
 --i-table /projects/b1052/mckenna/cando_16s/qiime/v1v3_table_dada2.qza \
---i-phylogeny /projects/b1052/mckenna/cando_16s/qiime/v1v3_rooted_tree.qz \
+--i-phylogeny /projects/b1052/mckenna/cando_16s/qiime/v1v3_rooted_tree.qza \
 --o-visualization /projects/b1052/mckenna/cando_16s/qiime/v1v3_rarefaction.qzv \
---p-max-depth 10000
+--p-max-depth 5600
 ```
 
 9) rarefy samples
-- picking a depth of 5000 based on rough estimate of plateau in faith_pd rarefaction curve
+- picking a depth of 3500 based on rough estimate of plateau in faith_pd rarefaction curve
 - rarefaction is important for equally comparing sequence data from different sampling dates and DNA extractions
 
 ```
 qiime diversity core-metrics-phylogenetic \
 --i-table /projects/b1052/mckenna/cando_16s/qiime/v1v3_table_dada2.qza \
 --i-phylogeny /projects/b1052/mckenna/cando_16s/qiime/v1v3_rooted_tree.qza \
---p-sampling-depth 5000 \
+--p-sampling-depth 3500 \
 --m-metadata-file /projects/b1052/mckenna/cando_16s/qiime/v1v3_metadata.txt \
---output-dir /projects/b1052/mckenna/cando_16s/qiime/core-metrics-results-5000
+--output-dir /projects/b1052/mckenna/cando_16s/qiime/core-metrics-results-3500
 ```
 
 # Data analysis
-[analysis.R](https://github.com/mckfarm/s2ebpr_16s/blob/main/analysis.R)
+[analysis.R](link here)
 - Data analysis performed in R with phyloseq and other R functions

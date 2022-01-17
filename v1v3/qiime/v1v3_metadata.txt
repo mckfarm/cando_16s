@@ -1,0 +1,8 @@
+sample-id	date
+MF_A1	04-May-21
+MF_A2	12-May-21
+MF_A3	15-Jun-21
+MF_A4	06-Jul-21
+MF_A5	17-Aug-21
+MF_A6	21-Oct-21
+MF_A7	03-Dec-21
