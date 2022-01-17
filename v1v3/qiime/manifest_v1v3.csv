@@ -1,0 +1,15 @@
+sample-id,absolute-filepath,direction
+MF_A1,/projects/b1052/mckenna/cando_16s/raw_reads/GMCF-169-1-MF-A1_S49_L001_R1_001.fastq.gz,forward
+MF_A1,/projects/b1052/mckenna/cando_16s/raw_reads/GMCF-169-1-MF-A1_S49_L001_R2_001.fastq.gz,reverse
+MF_A2,/projects/b1052/mckenna/cando_16s/raw_reads/GMCF-169-2-MF-A2_S50_L001_R1_001.fastq.gz,forward
+MF_A2,/projects/b1052/mckenna/cando_16s/raw_reads/GMCF-169-2-MF-A2_S50_L001_R2_001.fastq.gz,reverse
+MF_A3,/projects/b1052/mckenna/cando_16s/raw_reads/GMCF-169-3-MF-A3_S51_L001_R1_001.fastq.gz,forward
+MF_A3,/projects/b1052/mckenna/cando_16s/raw_reads/GMCF-169-3-MF-A3_S51_L001_R2_001.fastq.gz,reverse
+MF_A4,/projects/b1052/mckenna/cando_16s/raw_reads/GMCF-169-4-MF-A4_S52_L001_R1_001.fastq.gz,forward
+MF_A4,/projects/b1052/mckenna/cando_16s/raw_reads/GMCF-169-4-MF-A4_S52_L001_R2_001.fastq.gz,reverse
+MF_A5,/projects/b1052/mckenna/cando_16s/raw_reads/GMCF-169-5-MF-A5_S53_L001_R1_001.fastq.gz,forward
+MF_A5,/projects/b1052/mckenna/cando_16s/raw_reads/GMCF-169-5-MF-A5_S53_L001_R2_001.fastq.gz,reverse
+MF_A6,/projects/b1052/mckenna/cando_16s/raw_reads/GMCF-169-6-MF-A6_S54_L001_R1_001.fastq.gz,forward
+MF_A6,/projects/b1052/mckenna/cando_16s/raw_reads/GMCF-169-6-MF-A6_S54_L001_R2_001.fastq.gz,reverse
+MF_A7,/projects/b1052/mckenna/cando_16s/raw_reads/GMCF-169-7-MF-A7_S55_L001_R1_001.fastq.gz,forward
+MF_A7,/projects/b1052/mckenna/cando_16s/raw_reads/GMCF-169-7-MF-A7_S55_L001_R2_001.fastq.gz,reverse
