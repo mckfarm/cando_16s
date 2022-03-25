@@ -1,5 +1,5 @@
 ### packages and working directory ---------
-setwd("~/Github/cando_16s/v4")
+setwd("~/Github/cando_16s/dec21/v4")
 
 library(qiime2R)
 library(phyloseq)
@@ -23,7 +23,7 @@ physeq <- subset_taxa(physeq, !Genus=="Mitochondria" & !Genus=="Chloroplast")
 rel <- transform_sample_counts(physeq, function(x) x*100/sum(x))
 write.csv(rel@tax_table,"./results/all_tax.csv")
 
-topN <- 10
+topN <- 20
 rel_10_names <- sort(taxa_sums(rel), decreasing=TRUE)[1:topN]
 rel_10 <- prune_taxa(names(rel_10_names), rel)
 
@@ -59,14 +59,17 @@ rel_nit_df$date <- mdy(rel_nit_df$date)
 rel_phos_df$date <- mdy(rel_phos_df$date)
 rel_10_df$date <- mdy(rel_10_df$date)
 
-### correlation matrix PAO/GAO ------
 
 # subset columns
-rel_phos_df <- rel_phos_df %>% select("Abundance","date","Genus")
+rel_phos_df <- rel_phos_df %>% select("date","Abundance","Genus")
+rel_10_df <- rel_10_df %>% select("Abundance","date","Genus")
+write.csv(rel_10_df,"./results/10_taxa.csv")
 
 # reshape to wide format for correlation function
 rel_phos_df_subset <- spread(rel_phos_df, key = Genus, value = Abundance) 
-write.csv(rel_phos_df_subset,"phos_taxa.csv")
+write.csv(rel_phos_df_subset,"./results/phos_taxa.csv")
+
+### correlation matrix PAO/GAO ------
 
 # save correlation matrix
 cor_rel_phos <- cor(select(rel_phos_df_subset,-c(date)))
@@ -90,19 +93,6 @@ ggsave("./results/relative_ab_nit.tiff",width=2500,height=1500,unit="px")
 
 # PAOs/GAOs
 ggplot(data=rel_phos_df,mapping=aes(x=date,y=Abundance,
-                                    fill=factor(Genus,levels=c("Ca_Accumulibacter","Tetrasphaera","Ca_Competibacter")))) +
-  geom_bar(stat="identity") +
-  theme_bw() +
-  scale_fill_manual(values=met.brewer("Hiroshige", 3)) +
-  theme(axis.text.x = element_text(angle = 0),legend.text = element_text(face = "italic")) +
-  scale_x_date(date_labels="%m-%y") +
-  ylab("Relative Abundance (%)") +
-  xlab("Date (Month-Year)") +
-  labs(fill="Genus")
-
-ggsave("./results/relative_ab_phos.tiff",width=3000,height=1500,unit="px")
-
-ggplot(data=rel_phos_df,mapping=aes(x=date,y=Abundance,
                                     fill=factor(Genus,levels=c("Ca_Accumulibacter","Tetrasphaera","Ca_Obscuribacter","Dechloromonas","Halomonas","Microlunatus",
                                                                "Ca_Competibacter","Ca_Contendobacter","Defluviicoccus","Micropruina","Propionvibrio")))) + 
   geom_bar(stat="identity") + 
@@ -114,7 +104,7 @@ ggplot(data=rel_phos_df,mapping=aes(x=date,y=Abundance,
   xlab("Date") + 
   labs(fill="Genus")
 
-ggsave("relative_ab_phos.tiff",
+ggsave("./results/relative_ab_phos.tiff",
        width=3000,height=2000,unit="px",dpi=400)
 
 # top 10 abundant genus
