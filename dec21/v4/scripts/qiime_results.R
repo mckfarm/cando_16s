@@ -9,14 +9,16 @@ library(cowplot)
 library(lubridate)
 library(MetBrewer)
 library(ggcorrplot)
+library(microbiome)
 
 # data import --------
 physeq <- qza_to_phyloseq(
-  features="./qiime/rarefied_table.qza",
-  tree="./qiime/rooted_tree.qza",
-  taxonomy="./qiime/taxonomy_midas.qza",
-  metadata = "./qiime/mar01_metadata.txt"
+  features="./qiime_outputs/table_dada2.qza",
+  tree="./qiime_outputs/rooted_tree.qza",
+  taxonomy="./qiime_outputs/taxonomy.qza",
+  metadata = "./qiime_outputs/metadata.txt"
 )
+
 
 phases <- data.frame(x1=ymd("2021-05-26"),x2=ymd("2021-08-06"),
                      x3=ymd("2021-12-3"),x4=ymd("2022-04-04"),
@@ -26,13 +28,16 @@ phases <- data.frame(x1=ymd("2021-05-26"),x2=ymd("2021-08-06"),
 # removing eukaryotes
 physeq <- subset_taxa(physeq, !Genus=="Mitochondria" & !Genus=="Chloroplast")
 
+# rarefying
+## this is an optional step where reads are randomly sampled from each sample
+## the number of reads is equal to minimum number of reads 
+physeq2 <- rarefy_even_depth(physeq,sample.size=min(sample_sums(physeq)),
+                             rngseed=1)
+rarefy_level <- min(sample_sums(physeq2))
+
 # relative abundance
 rel <- transform_sample_counts(physeq, function(x) x*100/sum(x))
-# write.csv(rel@tax_table,"./results/all_tax.csv")
-
-topN <- 20
-rel_10_names <- sort(taxa_sums(rel), decreasing=TRUE)[1:topN]
-rel_10 <- prune_taxa(names(rel_10_names), rel)
+write.csv(rel@tax_table,"./results/all_tax.csv")
 
 # specific functional groups -------
 ## nitrifiers, PAOs/GAOs
@@ -52,20 +57,14 @@ rel_phos <- tax_glom(rel_phos,"Genus")
 
 # prep for plotting with ggplot - convert to dataframe format
 rel_nit_df <- psmelt(rel_nit) 
-rel_phos_df <- psmelt(rel_phos)
-rel_phos_df$Genus <- factor(rel_phos_df$Genus,levels=c("Ca_Accumulibacter","Tetrasphaera","Dechloromonas",
-                                           "Ca_Competibacter","Micropruina"))
-rel_10_df <- psmelt(rel_10)
+rel_phos_df <- psmelt(rel_phos) 
+rel_phos_df$Genus <- factor(rel_phos_df$Genus,
+                            levels=c("Ca_Accumulibacter","Tetrasphaera","Dechloromonas",
+                                     "Ca_Competibacter","Micropruina"))
 
 # date formatting
 rel_nit_df$date <- mdy(rel_nit_df$date)
 rel_phos_df$date <- mdy(rel_phos_df$date)
-rel_10_df$date <- mdy(rel_10_df$date)
-
-# subset columns
-rel_phos_df <- rel_phos_df %>% select("date","Abundance","Genus")
-rel_10_df <- rel_10_df %>% select("date","Abundance","Genus")
-# write.csv(rel_10_df,"./results/10_taxa.csv")
 
 
 # plotting nitrifiers -----------
@@ -78,9 +77,11 @@ ggplot(data=rel_nit_df,mapping=aes(x=date,y=Abundance,fill=Genus)) +
   ylab("Relative Abundance (%)") + 
   xlab("Date (Month-Year)") +
   labs(fill="Genus")
-ggsave("./results/relative_ab_nit.tiff",width=2500,height=1500,unit="px")
+ggsave("./results/relative_ab_nit.tiff",width=5,height=4,units="in")
 
-# plotting PAOs/GAOs
+
+
+# plotting PAOs/GAOs ------------
 ggplot(data=rel_phos_df,mapping=aes(x=date,y=Abundance,fill=Genus)) + 
   geom_bar(stat="identity") + 
   theme_classic() + 
@@ -91,20 +92,7 @@ ggplot(data=rel_phos_df,mapping=aes(x=date,y=Abundance,fill=Genus)) +
   geom_vline(xintercept=phases$x2,color="chocolate4") +
   ylim(0,40) +
   theme(legend.position="none")
-ggsave("./results/relative_ab_phos.tiff",width=7,height=4,units="in")
-
-# top 10 abundant genus
-ggplot(data=rel_10_df,mapping=aes(x=date,y=Abundance,fill=Genus)) +
-  geom_bar(stat="identity") + 
-  theme_bw() + 
-  scale_fill_manual(values=met.brewer("Redon", 13)) + 
-  theme(axis.text.x = element_text(angle = 0),legend.text = element_text(face = "italic")) +
-  scale_x_date(date_breaks = "1 month", date_labels =  "%b %y") +
-  ylab("Relative Abundance (%)") + 
-  xlab("") + 
-  labs(fill="Genus")
-
-ggsave("./results/top10.tiff",width=3500,height=1500,unit="px",dpi=400)
+ggsave("./results/relative_ab_phos.tiff",width=5,height=4,units="in")
 
 
 # correlation matrix PAO/GAO ------
@@ -127,5 +115,20 @@ ggcorrplot(spear_rel_phos, p.mat=spear_rel_phos_pmat,
 ggsave("./results/phos_corr.tiff",width=4,height=3,unit="in",scale=1.5)
 
 
+# core microbiome -----------
+# install microbiome package from BioConductor package manager
+# https://www.bioconductor.org/
+# https://microbiome.github.io/tutorials/
+
+# genus level 
+rel_glom <- tax_glom(rel,taxrank="Genus")
+
+core_test <- core(subset_samples(rel_glom,location=="test"),
+                  detection = 0.5, prevalence = 80/100)
+core_con <- core(subset_samples(rel_glom,location=="control"),
+                 detection = 0.5, prevalence = 80/100)
+core_ras <- core(subset_samples(rel_glom,location=="ras"),
+                 detection = 0.5, prevalence = 80/100)
+plot_bar(core_test,"Sample","Abundance","Genus")
 
 
