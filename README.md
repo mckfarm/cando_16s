@@ -1,5 +1,7 @@
-# CANDO+P reactor - 16s rRNA analysis
-This repo summarizes the workflow and scripts for analyzing 16s rRNA sequence data from the lab-scale CANDO+P reactor. DNA was extracted from reactor biomass and sequenced at the Rush Genomics Core and Microbiome Core Facility.
+# CANDO+P reactor - 16S rRNA analysis
+This repo summarizes the workflow and scripts for analyzing 16s rRNA sequence data from the lab-scale CANDO+P reactor. DNA was extracted from reactor biomass and sequenced at the Rush Genomics Core and Microbiome Core Facility.  
+
+Taxonomy was classified using the MiDAS v4 database.  
 
 As of March 25 2022, GitHub is organized by sequencing date:
 
